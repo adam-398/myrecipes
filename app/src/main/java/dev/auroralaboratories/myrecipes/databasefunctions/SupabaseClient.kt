@@ -126,7 +126,8 @@ suspend fun updatePassword(newPassword: String): Boolean {
         }
         true
     } catch (e: Exception) {
-        Log.e("UpdatePasswordDebug", "Error updating password", e)
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error updating password: $e"))
+
         false
     }
 }

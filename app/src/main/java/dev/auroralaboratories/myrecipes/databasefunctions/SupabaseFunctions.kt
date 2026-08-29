@@ -5,10 +5,12 @@ import dev.auroralaboratories.myrecipes.databasefunctions.SupabaseClient.supabas
 import dev.auroralaboratories.myrecipes.dataclasses.Recipe
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.io.files.Path
 
 /**
  * Adds a new recipe to the database.
  * @param title The title of the recipe.
+ * @param cuisine The cuisine of the recipe.
  * @param description The description of the recipe.
  * @param instructions The instructions for the recipe.
  * @param servings The number of servings for the recipe.
@@ -47,5 +49,85 @@ suspend fun addRecipe(
     } catch (e: Exception) {
         FirebaseCrashlytics.getInstance().recordException(Exception("Error adding recipe: $e"))
         null
+    }
+}
+
+/**
+ * Fetches all recipes from the database.
+ * @return A list of recipes.
+ */
+suspend fun fetchAllRecipes(): List<Recipe> {
+    return try {
+        val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return emptyList()
+        supabase.postgrest["recipes"]
+            .select {
+                filter { eq("user_id", userId) }
+            }
+            .decodeList()
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error fetching recipes: $e"))
+        emptyList()
+    }
+}
+
+/**
+ * Fetches a recipe by its ID.
+ * @param id The ID of the recipe.
+ * @return The recipe with the specified ID.
+ */
+suspend fun fetchRecipeById(id: String): Recipe? {
+    return try {
+        supabase.postgrest["recipes"]
+            .select {
+                filter { eq("id", id) }
+            }
+            .decodeSingle<Recipe>()
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error fetching items: $e"))
+        null
+    }
+}
+
+/**
+ * Deletes a recipe in the database.
+ * @param id The ID of the recipe to update.
+ */
+suspend fun deleteRecipeById(id: String): Boolean {
+    return try {
+        val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return false
+        supabase.postgrest["recipes"]
+            .delete {
+                filter {
+                    eq("user_id", userId)
+                    eq("id", id)
+                }
+            }
+        true
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error deleting recipe: $e"))
+        false
+    }
+}
+
+/**
+ * Updates a recipe in the database.
+ * @param id The ID of the recipe to update.
+ * @param updatedRecipe The updated recipe object.
+ * @return True if the update was successful, false otherwise.
+ */
+suspend fun updateRecipeById(id: String, updatedRecipe: Recipe): Boolean {
+    return try {
+        val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return false
+        supabase.postgrest["recipes"]
+            .update (updatedRecipe) {
+                filter {
+                    eq("id", id)
+                    eq("user_id", userId)
+                }
+            }
+        true
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error updating item: $e"))
+        false
     }
 }

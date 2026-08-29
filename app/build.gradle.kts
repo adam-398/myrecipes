@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.2.21"
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -62,6 +64,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-crashlytics")
+    implementation(platform("com.google.firebase:firebase-bom:34.18.0"))
 
 
     implementation(libs.androidx.core.ktx)
