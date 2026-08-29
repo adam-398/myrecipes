@@ -2,11 +2,12 @@ package dev.auroralaboratories.myrecipes.databasefunctions
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.auroralaboratories.myrecipes.databasefunctions.SupabaseClient.supabase
+import dev.auroralaboratories.myrecipes.dataclasses.Cuisine
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
 import dev.auroralaboratories.myrecipes.dataclasses.Recipe
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.io.files.Path
+import io.github.jan.supabase.postgrest.query.Order
 
 /**
  * Adds a new recipe to the database.
@@ -122,7 +123,7 @@ suspend fun updateRecipeById(id: String, updatedRecipe: Recipe): Boolean {
     return try {
         val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return false
         supabase.postgrest["recipes"]
-            .update (updatedRecipe) {
+            .update(updatedRecipe) {
                 filter {
                     eq("id", id)
                     eq("user_id", userId)
@@ -132,5 +133,67 @@ suspend fun updateRecipeById(id: String, updatedRecipe: Recipe): Boolean {
     } catch (e: Exception) {
         FirebaseCrashlytics.getInstance().recordException(Exception("Error updating item: $e"))
         false
+    }
+}
+
+/**
+ * Fetches recipes by cuisine.
+ * @param cuisineId The ID of the cuisine.
+ * @return A list of recipes.
+ */
+suspend fun getRecipesByCuisine(cuisineId: String): List<Recipe> {
+    return try {
+        val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return emptyList()
+        supabase.postgrest["recipes"]
+            .select {
+                filter {
+                    eq("user_id", userId)
+                    eq("cuisine_id", cuisineId)
+                }
+            }
+            .decodeList()
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance()
+            .recordException(Exception("Error fetching recipes by cuisine: $e"))
+        emptyList()
+    }
+}
+
+/**
+ * Fetches cuisines
+ * @return A list of cuisines
+ */
+suspend fun getCuisines(): List<Cuisine> {
+    return try {
+        supabase.postgrest["cuisines"]
+            .select {
+                order("name", order = Order.ASCENDING)
+            }
+            .decodeList()
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error fetching cuisines: $e"))
+        emptyList()
+    }
+}
+
+/**
+ * Searches for recipes by title (case-insensitive, partial match).
+ * @param query The search text to match against recipe titles.
+ * @return A list of matching recipes.
+ */
+suspend fun searchRecipesByTitle(query: String): List<Recipe> {
+    return try {
+        val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return emptyList()
+        supabase.postgrest["recipes"]
+            .select {
+                filter {
+                    eq("user_id", userId)
+                    ilike("title", "%$query%")
+                }
+            }
+            .decodeList()
+    } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(Exception("Error searching recipes: $e"))
+        emptyList()
     }
 }

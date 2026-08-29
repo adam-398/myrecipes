@@ -30,7 +30,12 @@ data class Recipe(
     val ingredients: List<Ingredient> = emptyList()
 )
 
-
+/**
+ * Data class representing an ingredient in a recipe.
+ * @property name The name of the ingredient.
+ * @property quantity The quantity of the ingredient.
+ * @property unit The unit of the ingredient.
+ */
 @Serializable
 data class Ingredient(
     val name: String,
