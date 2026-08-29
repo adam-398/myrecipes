@@ -238,4 +238,8 @@ fun ResetNewPasswordScreen(navController: NavController) {
         )
     }
 }
-
+@Preview(showBackground = true)
+@Composable
+fun ResetNewPasswordScreenPreview() {
+    ResetNewPasswordScreen(navController = rememberNavController())
+}

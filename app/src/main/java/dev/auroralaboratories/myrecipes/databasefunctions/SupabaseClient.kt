@@ -26,6 +26,7 @@ object SupabaseClient {
 
     /**
      * Initializes the Supabase client with the provided context.
+     * @param context The application context.
      */
     fun initialize(context: Context) {
         supabase = createSupabaseClient(
@@ -137,7 +138,7 @@ suspend fun updatePassword(newPassword: String): Boolean {
 suspend fun deleteUserAccount(): Boolean {
     return try {
         val userId = supabase.auth.currentUserOrNull()?.id ?: return false
-        supabase.from("lists").delete {
+        supabase.postgrest["recipes"].delete {
             filter { eq("user_id", userId) }
         }
         supabase.postgrest.rpc("delete_user")

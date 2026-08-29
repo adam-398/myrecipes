@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.auroralaboratories.myrecipes.databasefunctions.registerUser
 import dev.auroralaboratories.myrecipes.reusablemessages.ReusableMessage
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraButton
@@ -93,17 +94,11 @@ fun RegisterUser(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Trail Weight",
+                text = "My Recipes",
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = "Create an account to start tracking",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 32.dp)
             )
 
             Card(
@@ -259,3 +254,8 @@ fun RegisterUser(navController: NavController) {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun RegisterUserPreview() {
+    RegisterUser(navController = rememberNavController())
+}

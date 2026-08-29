@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.auroralaboratories.myrecipes.databasefunctions.resetPassword
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraButton
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraInputField
@@ -80,7 +81,7 @@ fun ForgotPassword(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Trail Weight",
+                text = "My Recipes",
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
@@ -165,4 +166,10 @@ fun ForgotPassword(navController: NavController) {
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ForgotPasswordPreview() {
+    ForgotPassword(navController = rememberNavController())
 }
