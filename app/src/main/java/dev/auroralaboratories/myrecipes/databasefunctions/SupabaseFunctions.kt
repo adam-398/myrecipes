@@ -2,6 +2,7 @@ package dev.auroralaboratories.myrecipes.databasefunctions
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.auroralaboratories.myrecipes.databasefunctions.SupabaseClient.supabase
+import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
 import dev.auroralaboratories.myrecipes.dataclasses.Recipe
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
@@ -24,7 +25,8 @@ suspend fun addRecipe(
     instructions: String? = null,
     servings: Int? = null,
     prepTime: Int? = null,
-    cookTime: Int? = null
+    cookTime: Int? = null,
+    ingredients: List<Ingredient> = emptyList()
 ): String? {
     return try {
         val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return null
@@ -37,7 +39,8 @@ suspend fun addRecipe(
             instructions = instructions,
             servings = servings,
             prep_time_minutes = prepTime,
-            cook_time_minutes = cookTime
+            cook_time_minutes = cookTime,
+            ingredients = ingredients
         )
 
         supabase.postgrest["recipes"]

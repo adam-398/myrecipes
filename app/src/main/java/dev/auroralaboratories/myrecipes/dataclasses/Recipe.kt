@@ -27,4 +27,13 @@ data class Recipe(
     val prep_time_minutes: Int? = null,
     val cook_time_minutes: Int? = null,
     val created_at: String? = null,
+    val ingredients: List<Ingredient> = emptyList()
+)
+
+
+@Serializable
+data class Ingredient(
+    val name: String,
+    val quantity: Double? = null,
+    val unit: String? = null
 )
