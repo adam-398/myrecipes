@@ -1,4 +1,6 @@
 package dev.auroralaboratories.myrecipes
 
-class Landing {
+import androidx.navigation.NavController
+
+class Landing(navController: NavController) {
 }

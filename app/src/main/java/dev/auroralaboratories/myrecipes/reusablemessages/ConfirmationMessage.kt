@@ -1,0 +1,112 @@
+package dev.auroralaboratories.myrecipes.reusablemessages
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import dev.auroralaboratories.myrecipes.uicomponents.AuroraButton
+import dev.auroralaboratories.myrecipes.uicomponents.AuroraButtonStyle
+
+/**
+ * Reusable confirmation message
+ * @param title The title of the screen
+ * @param message The message to display
+ * @param confirmString to display on the confirm button
+ * @param dismissString to display on the dismiss button
+ * @param onConfirm Invoked when the user taps the confirm button
+ * @param onDismiss Invoked when the user taps the dismiss button
+ * @param confirmIcon to display on the confirm button
+ * @param dismissIcon to display on the dismiss button
+ * @param confirmStyle to apply to the confirm button
+ */
+@Composable
+fun ConfirmationMessage(
+    title: String,
+    message: String? = null,
+    confirmString: String,
+    dismissString: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    confirmIcon: ImageVector? = null,
+    dismissIcon: ImageVector? = null,
+    confirmStyle: AuroraButtonStyle = AuroraButtonStyle.Primary
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(dismissOnClickOutside = false)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(16.dp),
+            shape = RoundedCornerShape(22.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+                if (message != null) {
+                    Text(
+                        text = message,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+                ) {
+                    AuroraButton(
+                        text = dismissString,
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f),
+                        style = AuroraButtonStyle.Outlined,
+                        icon = dismissIcon
+                    )
+                    AuroraButton(
+                        text = confirmString,
+                        onClick = onConfirm,
+                        style = confirmStyle,
+                        modifier = Modifier.weight(1f),
+                        icon = confirmIcon
+                    )
+                }
+                Spacer(modifier = Modifier.size(8.dp))
+            }
+        }
+    }
+}
