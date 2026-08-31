@@ -1,10 +1,14 @@
 package dev.auroralaboratories.myrecipes.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.auroralaboratories.myrecipes.dataclasses.Cuisine
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
+import dev.auroralaboratories.myrecipes.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel class for creating a recipe.
@@ -23,30 +27,39 @@ import kotlinx.coroutines.flow.StateFlow
  * @property _ingredients The list of ingredients for the recipe.
  * @property ingredients The list of ingredients for the recipe.
  */
-class CreateRecipeViewModel(): ViewModel() {
+class CreateRecipeViewModel() : ViewModel() {
     private val _title = MutableStateFlow("")
-    val title: StateFlow<String> = _title
+    val title: StateFlow<String> = _title.asStateFlow()
 
     private val _description = MutableStateFlow<String?>(null)
-    val description: StateFlow<String?> = _description
+    val description: StateFlow<String?> = _description.asStateFlow()
 
     private val _instructions = MutableStateFlow<String?>(null)
-    val instructions: StateFlow<String?> = _instructions
+    val instructions: StateFlow<String?> = _instructions.asStateFlow()
 
     private val _servings = MutableStateFlow<Int?>(null)
-    val servings: StateFlow<Int?> = _servings
+    val servings: StateFlow<Int?> = _servings.asStateFlow()
 
     private val _prepTimeMinutes = MutableStateFlow<Int?>(null)
-    val prepTimeMinutes: StateFlow<Int?> = _prepTimeMinutes
+    val prepTimeMinutes: StateFlow<Int?> = _prepTimeMinutes.asStateFlow()
 
     private val _cookTimeMinutes = MutableStateFlow<Int?>(null)
-    val cookTimeMinutes: StateFlow<Int?> = _cookTimeMinutes
+    val cookTimeMinutes: StateFlow<Int?> = _cookTimeMinutes.asStateFlow()
 
     private val _ingredients = MutableStateFlow<List<Ingredient>>(emptyList())
-    val ingredients: StateFlow<List<Ingredient>> = _ingredients
+    val ingredients: StateFlow<List<Ingredient>> = _ingredients.asStateFlow()
 
     private val _selectedCuisine = MutableStateFlow<Cuisine?>(null)
-    val selectedCuisine: StateFlow<Cuisine?> = _selectedCuisine
+    val selectedCuisine: StateFlow<Cuisine?> = _selectedCuisine.asStateFlow()
+
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    private val repository = RecipeRepository()
 
     /**
      * Updates the title of the recipe.
@@ -128,6 +141,27 @@ class CreateRecipeViewModel(): ViewModel() {
      */
     fun updateCuisine(cuisine: Cuisine?) {
         _selectedCuisine.value = cuisine
+    }
+
+    fun saveRecipe() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+            val recipeId = repository.saveRecipe(
+                title = _title.value,
+                description = _description.value,
+                instructions = _instructions.value,
+                servings = _servings.value,
+                prepTime = _prepTimeMinutes.value,
+                cookTime = _cookTimeMinutes.value,
+                ingredients = _ingredients.value,
+                cuisine = _selectedCuisine.value?.id,
+            )
+            if (recipeId == null) {
+                _errorMessage.value = "Failed to save recipe"
+            }
+            _isLoading.value = false
+        }
     }
 
 }
