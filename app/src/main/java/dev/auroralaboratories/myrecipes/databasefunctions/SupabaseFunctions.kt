@@ -141,7 +141,7 @@ suspend fun updateRecipeById(id: String, updatedRecipe: Recipe): Boolean {
  * @param cuisineId The ID of the cuisine.
  * @return A list of recipes.
  */
-suspend fun getRecipesByCuisine(cuisineId: String): List<Recipe> {
+suspend fun fetchRecipesByCuisine(cuisineId: String): List<Recipe> {
     return try {
         val userId = supabase.auth.currentSessionOrNull()?.user?.id ?: return emptyList()
         supabase.postgrest["recipes"]
@@ -163,7 +163,7 @@ suspend fun getRecipesByCuisine(cuisineId: String): List<Recipe> {
  * Fetches cuisines
  * @return A list of cuisines
  */
-suspend fun getCuisines(): List<Cuisine> {
+suspend fun fetchCuisines(): List<Cuisine> {
     return try {
         supabase.postgrest["cuisines"]
             .select {
