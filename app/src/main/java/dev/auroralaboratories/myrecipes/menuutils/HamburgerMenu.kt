@@ -19,11 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.auroralabs.trailweight.uicomponents.TrailsGramsButtonStyle
-import dev.auroralaboratories.trailweight.Supabase.deleteUserAccount
-import dev.auroralaboratories.trailweight.Supabase.logoutUser
-import dev.auroralaboratories.trailweight.reusablemessages.ConfirmationMessage
-import dev.auroralaboratories.trailweight.reusablemessages.ReusableMessage
+import dev.auroralaboratories.myrecipes.databasefunctions.logoutUser
+import dev.auroralaboratories.myrecipes.reusablemessages.ConfirmationMessage
 import kotlinx.coroutines.launch
 
 
