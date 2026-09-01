@@ -1,14 +1,17 @@
 package dev.auroralaboratories.myrecipes.loginframes
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -37,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
@@ -62,6 +66,7 @@ import dev.auroralaboratories.trailweight.otherutils.passwordChecker
  * Composable function that displays the reset password screen.
  * @param navController The NavController to use for navigation.
  */
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun ResetNewPasswordScreen(navController: NavController) {
     var passwordState by remember { mutableStateOf("") }
@@ -72,6 +77,7 @@ fun ResetNewPasswordScreen(navController: NavController) {
     val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -97,12 +103,12 @@ fun ResetNewPasswordScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
                 .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(top = 35.dp)
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(screenHeight * 0.12f))
             Text(
                 text = "Set a new password",
                 style = MaterialTheme.typography.titleLarge,
@@ -112,6 +118,7 @@ fun ResetNewPasswordScreen(navController: NavController) {
                     .padding(bottom = 24.dp),
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(screenHeight * 0.05f))
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),

@@ -2,6 +2,7 @@ package dev.auroralaboratories.myrecipes.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.auroralaboratories.myrecipes.dataclasses.Cuisine
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
 import dev.auroralaboratories.myrecipes.repository.RecipeRepository
@@ -147,20 +148,26 @@ class CreateRecipeViewModel() : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            val recipeId = repository.saveRecipe(
-                title = _title.value,
-                description = _description.value,
-                instructions = _instructions.value,
-                servings = _servings.value,
-                prepTime = _prepTimeMinutes.value,
-                cookTime = _cookTimeMinutes.value,
-                ingredients = _ingredients.value,
-                cuisine = _selectedCuisine.value?.id,
-            )
-            if (recipeId == null) {
+            try {
+                val recipeId = repository.saveRecipe(
+                    title = _title.value,
+                    description = _description.value,
+                    instructions = _instructions.value,
+                    servings = _servings.value,
+                    prepTime = _prepTimeMinutes.value,
+                    cookTime = _cookTimeMinutes.value,
+                    ingredients = _ingredients.value,
+                    cuisine = _selectedCuisine.value?.id,
+                )
+                if (recipeId == null) {
+                    _errorMessage.value = "Failed to save recipe"
+                }
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
                 _errorMessage.value = "Failed to save recipe"
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
     }
 

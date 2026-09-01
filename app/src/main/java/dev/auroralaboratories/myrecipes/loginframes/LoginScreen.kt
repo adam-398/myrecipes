@@ -1,3 +1,4 @@
+
 package dev.auroralaboratories.myrecipes.loginframes
 
 import androidx.compose.foundation.background
@@ -5,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
@@ -71,6 +74,7 @@ fun LoginScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Box(
         modifier = Modifier
@@ -90,12 +94,12 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
                 .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(top = 35.dp)
                 .imePadding()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(screenHeight * 0.12f))
             Text(
                 text = "My Recipes",
                 style = MaterialTheme.typography.displayMedium,
@@ -104,7 +108,7 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-
+            Spacer(modifier = Modifier.height(screenHeight * 0.05f))
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
