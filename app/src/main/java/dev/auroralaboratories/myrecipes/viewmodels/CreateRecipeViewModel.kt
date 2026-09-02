@@ -53,8 +53,8 @@ class CreateRecipeViewModel() : ViewModel() {
     private val _selectedCuisine = MutableStateFlow<Cuisine?>(null)
     val selectedCuisine: StateFlow<Cuisine?> = _selectedCuisine.asStateFlow()
 
-    private val _availableCuisines = MutableStateFlow<List<Cuisine>>(emptyList())
-    val availableCuisines: StateFlow<List<Cuisine>> = _availableCuisines.asStateFlow()
+    //private val _availableCuisines = MutableStateFlow<List<Cuisine>>(emptyList())
+    //val availableCuisines: StateFlow<List<Cuisine>> = _availableCuisines.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -67,11 +67,11 @@ class CreateRecipeViewModel() : ViewModel() {
     /**
      * Initializes the ViewModel by fetching the list of available cuisines from the repository.
      */
-    init {
-        viewModelScope.launch {
-            _availableCuisines.value = repository.getCuisines()
-        }
-    }
+    //init {
+      //  viewModelScope.launch {
+        //    _availableCuisines.value = repository.getCuisines()
+       // }
+    //}
 
     /**
      * Updates the title of the recipe.
