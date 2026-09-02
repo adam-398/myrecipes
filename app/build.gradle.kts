@@ -56,7 +56,7 @@ dependencies {
 
     implementation("sh.calvin.reorderable:reorderable:2.4.0")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.36.0")
-
+    implementation("com.github.anhaki:PickTime-Compose:1.1.6")
 
 
     implementation(platform("io.github.dautovicharis:charts-bom:2.2.0"))

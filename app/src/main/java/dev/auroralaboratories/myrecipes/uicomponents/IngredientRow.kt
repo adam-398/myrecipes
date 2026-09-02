@@ -1,4 +1,4 @@
-package dev.auroralaboratories.myrecipes
+package dev.auroralaboratories.myrecipes.uicomponents
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
-import dev.auroralaboratories.myrecipes.uicomponents.AuroraDropdownField
-import dev.auroralaboratories.myrecipes.uicomponents.AuroraInputField
 
 @Composable
 fun IngredientRow(
