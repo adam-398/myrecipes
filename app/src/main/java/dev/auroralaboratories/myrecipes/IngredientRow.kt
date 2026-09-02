@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
+import dev.auroralaboratories.myrecipes.uicomponents.AuroraDropdownField
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraInputField
 
 @Composable
@@ -37,11 +38,12 @@ fun IngredientRow(
             label = "Quantity",
             modifier = Modifier.weight(0.5f)
         )
-        AuroraInputField(
-            value = ingredient.unit ?: "",
-            onValueChange = onUnitChange,
+        AuroraDropdownField(
+            selectedValue = ingredient.unit ?: "",
+            options = listOf("cups", "tbsp", "tsp", "g", "kg", "ml", "l", "oz", "lb"),
+            onValueSelected = onUnitChange,
             label = "Unit",
-            modifier = Modifier.weight(0.5f)
+            modifier = Modifier.weight(0.6f)
         )
         IconButton(onClick = { onRemove() }) {
             Icon(Icons.Default.Close, contentDescription = "Remove Ingredient")

@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import dev.auroralaboratories.myrecipes.IngredientRow
 import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraInputField
 import dev.auroralaboratories.myrecipes.viewmodels.CreateRecipeViewModel
@@ -93,38 +94,22 @@ fun CreateRecipe(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ingredients.forEachIndexed { index, ingredient ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AuroraInputField(
-                            value = ingredient.name,
-                            onValueChange = { newName ->
-                                viewModel.updateIngredientAt(index, ingredient.copy(name = newName))
-                                },
-                            label = "Ingredient",
-                            modifier = Modifier.weight(1f)
-                        )
-                        AuroraInputField(
-                            value = ingredient.quantity?.toString() ?: "",
-                            onValueChange = { newQuantity ->
-                                viewModel.updateIngredientAt(index, ingredient.copy(quantity = newQuantity.toDoubleOrNull()))
-                            },
-                            label = "Quantity",
-                            modifier = Modifier.weight(0.5f)
-                        )
-                        AuroraInputField(
-                            value = ingredient.unit ?: "",
-                            onValueChange = { newUnit ->
-                                viewModel.updateIngredientAt(index, ingredient.copy(unit = newUnit))
-                            },
-                            label = "Unit",
-                            modifier = Modifier.weight(0.5f)
-                        )
-                        IconButton(onClick = { viewModel.removeIngredientAt(index) }) {
-                            Icon(Icons.Default.Close, contentDescription = "Remove Ingredient")
-                        }
-                    }
+                    IngredientRow(
+                        ingredient = ingredient,
+                        onNameChange = { newName ->
+                            viewModel.updateIngredientAt(index, ingredient.copy(name = newName))
+                        },
+                        onQuantityChange = { newQuantity ->
+                            viewModel.updateIngredientAt(
+                                index,
+                                ingredient.copy(quantity = newQuantity.toDoubleOrNull())
+                            )
+                        },
+                        onUnitChange = { newUnit ->
+                            viewModel.updateIngredientAt(index, ingredient.copy(unit = newUnit))
+                        },
+                        onRemove = { viewModel.removeIngredientAt(index) }
+                    )
                 }
                 Button(onClick = { viewModel.addIngredient(Ingredient(name = "")) }) {
                     Text("Add Ingredient")
