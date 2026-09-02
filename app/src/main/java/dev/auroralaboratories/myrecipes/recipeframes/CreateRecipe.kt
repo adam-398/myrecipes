@@ -4,11 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import dev.auroralaboratories.myrecipes.dataclasses.Ingredient
 import dev.auroralaboratories.myrecipes.uicomponents.AuroraInputField
 import dev.auroralaboratories.myrecipes.viewmodels.CreateRecipeViewModel
 
@@ -40,6 +47,7 @@ fun CreateRecipe(
     val servings by viewModel.servings.collectAsState()
     val prepTimeMinutes by viewModel.prepTimeMinutes.collectAsState()
     val cookTimeMinutes by viewModel.cookTimeMinutes.collectAsState()
+    val ingredients by viewModel.ingredients.collectAsState()
     //val availableCuisines by viewModel.availableCuisines.collectAsState()
     //val selectedCuisine by viewModel.selectedCuisine.collectAsState()
 
@@ -62,7 +70,7 @@ fun CreateRecipe(
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -78,6 +86,58 @@ fun CreateRecipe(
                 onValueChange = { viewModel.updateDescription(it) },
                 label = "Description",
                 modifier = Modifier.fillMaxWidth()
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ingredients.forEachIndexed { index, ingredient ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AuroraInputField(
+                            value = ingredient.name,
+                            onValueChange = { newName ->
+                                viewModel.updateIngredientAt(index, ingredient.copy(name = newName))
+                                },
+                            label = "Ingredient",
+                            modifier = Modifier.weight(1f)
+                        )
+                        AuroraInputField(
+                            value = ingredient.quantity?.toString() ?: "",
+                            onValueChange = { newQuantity ->
+                                viewModel.updateIngredientAt(index, ingredient.copy(quantity = newQuantity.toDoubleOrNull()))
+                            },
+                            label = "Quantity",
+                            modifier = Modifier.weight(0.5f)
+                        )
+                        AuroraInputField(
+                            value = ingredient.unit ?: "",
+                            onValueChange = { newUnit ->
+                                viewModel.updateIngredientAt(index, ingredient.copy(unit = newUnit))
+                            },
+                            label = "Unit",
+                            modifier = Modifier.weight(0.5f)
+                        )
+                        IconButton(onClick = { viewModel.removeIngredientAt(index) }) {
+                            Icon(Icons.Default.Close, contentDescription = "Remove Ingredient")
+                        }
+                    }
+                }
+                Button(onClick = { viewModel.addIngredient(Ingredient("")) }) {
+                    Text("Add Ingredient")
+                }
+            }
+
+            AuroraInputField(
+                value = instructions ?: "",
+                onValueChange = { viewModel.updateInstructions(it) },
+                label = "Instructions",
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
+                minLines = 7
             )
         }
     }
