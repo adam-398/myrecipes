@@ -126,7 +126,7 @@ fun CreateRecipe(
                         }
                     }
                 }
-                Button(onClick = { viewModel.addIngredient(Ingredient("")) }) {
+                Button(onClick = { viewModel.addIngredient(Ingredient(name = "")) }) {
                     Text("Add Ingredient")
                 }
             }
